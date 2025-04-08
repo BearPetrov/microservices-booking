@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="com.obiscr.chatgpt.settings.EasyCodeState">
+    <option name="projectFiles" value="$PROJECT_DIR$/booking/src/main/java/org/msa/one/booking/api/BookingController.java;/Users/petrovmihajlo/IdeaProjects/microservices booking/booking/src/main/java/org/msa/one/booking/entity/Booking.java;/Users/petrovmihajlo/IdeaProjects/microservices booking/booking/src/main/java/org/msa/one/booking/repository/BookingRepository.java;/Users/petrovmihajlo/IdeaProjects/microservices booking/booking/src/main/java/org/msa/one/booking/service/BookingService.java;/Users/petrovmihajlo/IdeaProjects/microservices booking/booking/src/main/java/org/msa/one/booking/BookingApplication.java;/Users/petrovmihajlo/IdeaProjects/microservices booking/booking/src/test/java/org.msa.one.booking/BookingApplicationTests.java;/Users/petrovmihajlo/IdeaProjects/microservices booking/booking/HELP.md" />
+  </component>
+</project>
