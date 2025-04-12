@@ -34,12 +34,6 @@
 	<dependencies>
 
 
-		<dependency>
-			<groupId>com.h2database</groupId>
-			<artifactId>h2</artifactId>
-			<scope>runtime</scope>
-		</dependency>
-
 
 		<!-- Starter для веб-додатків (REST-контролери тощо) -->
 		<dependency>
@@ -54,18 +48,18 @@
 		</dependency>
 
 		<!-- БД: H2 (in-memory database) для простого тестування -->
-		<!-- Якщо потрібен PostgreSQL:
+		<!-- Якщо потрібен PostgreSQL:  -->
              <dependency>
                  <groupId>org.postgresql</groupId>
                  <artifactId>postgresql</artifactId>
                  <scope>runtime</scope>
              </dependency>
-        -->
-		<dependency>
+
+		<!-- <dependency>
 			<groupId>com.h2database</groupId>
 			<artifactId>h2</artifactId>
 			<scope>runtime</scope>
-		</dependency>
+		</dependency> -->
 
 		<!-- Lombok для скорочення шаблонного коду (гетери/сетери) -->
 		<dependency>
