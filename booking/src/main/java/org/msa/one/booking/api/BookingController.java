@@ -1,8 +1,9 @@
 package org.msa.one.booking.api;
 
-import org.msa.one.booking.entity.Booking;
+import lombok.RequiredArgsConstructor;
+import org.msa.one.booking.api.dto.BookingRequest;
+import org.msa.one.booking.api.dto.BookingResponse;
 import org.msa.one.booking.service.BookingService;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -14,26 +15,25 @@ public class BookingController {
 
     private final BookingService bookingService;
 
-    // Spring автоматично «впровадить» BookingService
     public BookingController(BookingService bookingService) {
         this.bookingService = bookingService;
     }
 
     @PostMapping
-    public ResponseEntity<Booking> createBooking(@RequestBody Booking booking) {
-        Booking saved = bookingService.createBooking(booking);
-        return ResponseEntity.status(HttpStatus.CREATED).body(saved);
+    public ResponseEntity<BookingResponse> createBooking(@RequestBody BookingRequest request) {
+        BookingResponse response = bookingService.createBooking(request);
+        return ResponseEntity.ok(response);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Booking> getBooking(@PathVariable Long id) {
+    public ResponseEntity<BookingResponse> getBooking(@PathVariable Long id) {
         return bookingService.getBooking(id)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
 
     @GetMapping("/by-email")
-    public List<Booking> getBookingsByEmail(@RequestParam String email) {
+    public List<BookingResponse> getBookingsByEmail(@RequestParam String email) {
         return bookingService.getBookingsByEmail(email);
     }
 
@@ -42,4 +42,6 @@ public class BookingController {
         bookingService.cancelBooking(id);
         return ResponseEntity.noContent().build();
     }
+
 }
+
