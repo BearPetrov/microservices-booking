@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+import java.util.UUID;
+
 @RestController
 @RequestMapping("/api/bookings")
 public class BookingController {
@@ -26,7 +28,7 @@ public class BookingController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<BookingResponse> getBooking(@PathVariable Long id) {
+    public ResponseEntity<BookingResponse> getBooking(@PathVariable UUID id) {
         return bookingService.getBooking(id)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
@@ -38,7 +40,7 @@ public class BookingController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> cancelBooking(@PathVariable Long id) {
+    public ResponseEntity<Void> cancelBooking(@PathVariable UUID id) {
         bookingService.cancelBooking(id);
         return ResponseEntity.noContent().build();
     }

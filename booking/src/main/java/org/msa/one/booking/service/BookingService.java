@@ -3,13 +3,19 @@ package org.msa.one.booking.service;
 import org.msa.one.booking.api.dto.BookingRequest;
 import org.msa.one.booking.api.dto.BookingResponse;
 import org.msa.one.booking.entity.Booking;
+import org.msa.one.booking.entity.BookingHistory;
+import org.msa.one.booking.entity.BookingSeat;
+import org.msa.one.booking.repository.BookingHistoryRepository;
 import org.msa.one.booking.repository.BookingRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
+import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,17 +31,24 @@ public class BookingService {
     private final MovieCatalogClient movieCatalogClient;
     private final NotificationClient notificationClient;
     private final PromoClient promoClient;
+    private final BookingHistoryRepository bookingHistoryRepository;
 
     public BookingService(BookingRepository bookingRepository,
                           SeatAvailabilityClient seatAvailabilityClient,
                           MovieCatalogClient movieCatalogClient,
                           NotificationClient notificationClient,
-                          PromoClient promoClient) {
+                          PromoClient promoClient,
+                          BookingHistoryRepository bookingHistoryRepository) {
         this.bookingRepository = bookingRepository;
         this.seatAvailabilityClient = seatAvailabilityClient;
         this.movieCatalogClient = movieCatalogClient;
         this.notificationClient = notificationClient;
         this.promoClient = promoClient;
+        this.bookingHistoryRepository = bookingHistoryRepository;
+    }
+
+    private BigDecimal calculateTotalPrice(List<String> seats, BigDecimal pricePerSeat) {
+        return pricePerSeat.multiply(BigDecimal.valueOf(seats.size()));
     }
 
     public BookingResponse createBooking(BookingRequest request) {
@@ -49,17 +62,41 @@ public class BookingService {
 
         movieCatalogClient.validateShowtime(request.getMovieId(), request.getShowTime());
 
-        Booking booking = new Booking();
-        booking.setUserEmail(request.getUserEmail());
-        booking.setMovieId(request.getMovieId());
-        booking.setShowTime(request.getShowTime());
-        booking.setSeats(request.getSeats());
-        booking.setBookingCode(generateBookingCode());
-        booking.setCreatedAt(LocalDateTime.now());
+        if (request.getShowtimeId() == null) {
+            throw new IllegalArgumentException("ShowtimeId cannot be null");
+        }
+
+        BigDecimal pricePerSeat = new BigDecimal("10.00");
+        List<String> seatList = List.of(request.getSeats().split(","));
+        BigDecimal totalPrice = calculateTotalPrice(seatList, pricePerSeat);
+
+        Booking booking = Booking.builder()
+                .userId(request.getUserId())
+                .showtimeId(request.getShowtimeId())
+                .userEmail(request.getUserEmail())
+                .movieId(request.getMovieId())
+                .showTime(request.getShowTime())
+                .seats(String.join(",", seatList))
+                .bookingCode(generateBookingCode())
+                .createdAt(LocalDateTime.now())
+                .status("ACTIVE")
+                .totalPrice(totalPrice)
+                .build();
+
+        List<BookingSeat> bookingSeats = seatList.stream()
+                .map(seat -> BookingSeat.builder()
+                        .seatLabel(seat)
+                        .price(pricePerSeat)
+                        .booking(booking)
+                        .build())
+                .toList();
+
+        bookingSeats.forEach(seat -> seat.setBooking(booking));
 
         Booking saved = bookingRepository.save(booking);
         log.info("Booking with ID={} created successfully", saved.getId());
 
+        saveBookingHistory(saved.getId(), "CREATED");
         notificationClient.sendBookingCreatedEvent(saved);
         seatAvailabilityClient.reserveSeats(saved.getMovieId(), saved.getSeats());
 
@@ -67,20 +104,21 @@ public class BookingService {
     }
 
     @Transactional(readOnly = true)
-    public Optional<BookingResponse> getBooking(Long bookingId) {
+    public Optional<BookingResponse> getBooking(UUID bookingId) {
         return bookingRepository.findById(bookingId)
                 .map(this::convertToResponse);
     }
 
     @Transactional(readOnly = true)
     public List<BookingResponse> getBookingsByEmail(String email) {
-        return bookingRepository.findByUserEmail(email)
-                .stream()
+        return bookingRepository.findAll().stream()
+                .filter(booking -> email.equals(booking.getUserEmail()))
                 .map(this::convertToResponse)
                 .toList();
     }
 
-    public void cancelBooking(Long bookingId) {
+    @Transactional
+    public void cancelBooking(UUID bookingId) {
         Booking booking = bookingRepository.findById(bookingId)
                 .orElseThrow(() -> new IllegalArgumentException("Booking not found with id=" + bookingId));
 
@@ -92,6 +130,13 @@ public class BookingService {
         booking.setCanceledAt(LocalDateTime.now());
         bookingRepository.save(booking);
 
+        saveBookingHistory(booking.getId(), "CANCELED");
+
+        if (booking.getSeats() == null || booking.getSeats().isEmpty()) {
+            log.warn("No seats found for booking ID={}", bookingId);
+            return;
+        }
+
         seatAvailabilityClient.releaseSeats(booking.getMovieId(), booking.getSeats());
         notificationClient.sendBookingCanceledEvent(booking);
         promoClient.sendPromoEvent(booking.getUserEmail());
@@ -100,12 +145,13 @@ public class BookingService {
     }
 
     private BookingResponse convertToResponse(Booking booking) {
+        List<String> seatList = List.of(booking.getSeats().split(","));
         return BookingResponse.builder()
-                .id(booking.getId())
+                .id(booking.getId().toString())
                 .userEmail(booking.getUserEmail())
                 .movieId(booking.getMovieId())
                 .showTime(booking.getShowTime())
-                .seats(booking.getSeats())
+                .seats(String.join(",", seatList))
                 .bookingCode(booking.getBookingCode())
                 .createdAt(booking.getCreatedAt())
                 .canceledAt(booking.getCanceledAt())
@@ -114,5 +160,14 @@ public class BookingService {
 
     private String generateBookingCode() {
         return "BOOK-" + System.currentTimeMillis();
+    }
+
+    private void saveBookingHistory(UUID bookingId, String changeType) {
+        BookingHistory history = BookingHistory.builder()
+                .bookingId(bookingId)
+                .changeType(changeType)
+                .timestamp(LocalDateTime.now())
+                .build();
+        bookingHistoryRepository.save(history);
     }
 }

@@ -8,7 +8,7 @@ import java.time.LocalDateTime;
 @Data
 @Builder
 public class BookingResponse {
-    private Long id;
+    private String id; // Изменено с Long на String
     private String userEmail;
     private Long movieId;
     private LocalDateTime showTime;
