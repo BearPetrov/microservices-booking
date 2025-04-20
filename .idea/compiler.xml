@@ -13,16 +13,17 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
+        <module name="api-gateway" />
+        <module name="discovery" />
       </profile>
-      <profile name="Annotation profile for booking" enabled="true">
+      <profile name="Annotation profile for Notification" enabled="true">
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <processorPath useClasspath="false">
-          <entry name="$MAVEN_REPOSITORY$/org/projectlombok/lombok/1.18.30/lombok-1.18.30.jar" />
-          <entry name="$MAVEN_REPOSITORY$/org/projectlombok/lombok/1.18.30/lombok-1.18.30.jar" />
+          <entry name="$MAVEN_REPOSITORY$/org/projectlombok/lombok/1.18.36/lombok-1.18.36.jar" />
         </processorPath>
-        <module name="booking" />
+        <module name="notification" />
       </profile>
       <profile name="Annotation profile for SeatAvailability" enabled="true">
         <sourceOutputDir name="target/generated-sources/annotations" />
@@ -35,17 +36,18 @@
         <module name="Promo" />
         <module name="MovieCatalog" />
       </profile>
-      <profile name="Annotation profile for Notification" enabled="true">
+      <profile name="Annotation profile for booking" enabled="true">
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <processorPath useClasspath="false">
-          <entry name="$MAVEN_REPOSITORY$/org/projectlombok/lombok/1.18.32/lombok-1.18.32.jar" />
+          <entry name="$MAVEN_REPOSITORY$/org/projectlombok/lombok/1.18.30/lombok-1.18.30.jar" />
         </processorPath>
-        <module name="notification" />
+        <module name="booking" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
+      <module name="config" target="17" />
       <module name="microservices-booking" target="1.5" />
       <module name="MovieCatalog.main" target="17" />
       <module name="MovieCatalog.test" target="17" />
@@ -63,7 +65,10 @@
       <module name="MovieCatalog" options="-parameters" />
       <module name="Promo" options="-parameters" />
       <module name="SeatAvailability" options="-parameters" />
+      <module name="api-gateway" options="-parameters" />
       <module name="booking" options="-parameters" />
+      <module name="config" options="-parameters" />
+      <module name="discovery" options="-parameters" />
       <module name="notification" options="-parameters" />
     </option>
   </component>

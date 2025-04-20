@@ -1,4 +1,3 @@
-
 services:
   db:
     image: postgres:14
@@ -40,6 +39,44 @@ services:
       RABBITMQ_DEFAULT_PASS: guest
     networks:
       - pgnetwork
+
+  eureka-server:
+    build:
+      context: ./eureka-server
+    container_name: eureka-server
+    networks:
+      - pgnetwork
+    ports:
+      - "8762:8762"
+
+  booking-service:
+    build:
+      context: ./booking
+    container_name: booking
+    networks:
+      - pgnetwork
+    environment:
+      - EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE=http://eureka-server:8762/eureka/
+    ports:
+      - "8001:8001"
+    depends_on:
+      - eureka-server
+      - rabbitmq
+
+  notification-service:
+    build:
+      context: ./notification
+    container_name: notification
+    networks:
+      - pgnetwork
+    environment:
+      - EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE=http://eureka-server:8762/eureka/
+    ports:
+      - "8082:8082"
+    depends_on:
+      - eureka-server
+      - rabbitmq
+
 
 volumes:
   postgres_data:

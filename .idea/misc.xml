@@ -16,7 +16,17 @@
         <option value="$PROJECT_DIR$/MovieCatalog/pom.xml" />
         <option value="$PROJECT_DIR$/Promo/pom.xml" />
         <option value="$PROJECT_DIR$/SeatAvailability/pom.xml" />
+        <option value="$PROJECT_DIR$/api-gateway/pom.xml" />
+        <option value="$PROJECT_DIR$/discovery/pom.xml" />
+        <option value="$PROJECT_DIR$/config/pom.xml" />
+        <option value="$PROJECT_DIR$/eureka-server/pom.xml" />
+        <option value="$PROJECT_DIR$/booking-service/pom.xml" />
       </list>
+    </option>
+    <option name="ignoredFiles">
+      <set>
+        <option value="$PROJECT_DIR$/config/pom.xml" />
+      </set>
     </option>
   </component>
   <component name="ProjectRootManager" version="2" languageLevel="JDK_23" project-jdk-name="corretto-17" project-jdk-type="JavaSDK">

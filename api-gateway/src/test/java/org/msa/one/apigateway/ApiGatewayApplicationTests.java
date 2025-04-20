@@ -1,11 +1,13 @@
-package org.msa.one.notification;
+package org.msa.one.apigateway;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class NotificationApplicationTests {
+class ApiGatewayApplicationTests {
+
     @Test
     void contextLoads() {
     }
+
 }
