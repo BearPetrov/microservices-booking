@@ -1,3 +1,5 @@
+version: '3.8'
+
 services:
   db:
     image: postgres:14
@@ -44,39 +46,53 @@ services:
     build:
       context: ./eureka-server
     container_name: eureka-server
+    ports:
+      - "8761:8761"
     networks:
       - pgnetwork
+
+  api-gateway:
+    build:
+      context: ./api-gateway
+    container_name: api-gateway
     ports:
-      - "8762:8762"
+      - "8080:8080"
+    environment:
+      - EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE=http://eureka-server:8761/eureka/
+    depends_on:
+      - eureka-server
+    networks:
+      - pgnetwork
 
   booking-service:
     build:
-      context: ./booking
-    container_name: booking
-    networks:
-      - pgnetwork
-    environment:
-      - EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE=http://eureka-server:8762/eureka/
+      context: ./booking-service
+    container_name: booking-service
     ports:
       - "8001:8001"
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+      - EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE=http://eureka-server:8761/eureka/
     depends_on:
+      - db
       - eureka-server
       - rabbitmq
+    networks:
+      - pgnetwork
 
   notification-service:
     build:
       context: ./notification
     container_name: notification
-    networks:
-      - pgnetwork
-    environment:
-      - EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE=http://eureka-server:8762/eureka/
     ports:
       - "8082:8082"
+    environment:
+      - EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE=http://eureka-server:8761/eureka/
     depends_on:
       - eureka-server
       - rabbitmq
-
+    networks:
+      - pgnetwork
 
 volumes:
   postgres_data:
