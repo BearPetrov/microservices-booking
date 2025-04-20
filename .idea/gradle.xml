@@ -1,31 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
-  <component name="GradleSettings">
-    <option name="linkedExternalProjectsSettings">
-      <GradleProjectSettings>
-        <option name="externalProjectPath" value="$PROJECT_DIR$/Notification" />
-        <option name="modules">
-          <set>
-            <option value="$PROJECT_DIR$/Notification" />
-          </set>
-        </option>
-      </GradleProjectSettings>
-      <GradleProjectSettings>
-        <option name="externalProjectPath" value="$PROJECT_DIR$/Promo" />
-        <option name="modules">
-          <set>
-            <option value="$PROJECT_DIR$/Promo" />
-          </set>
-        </option>
-      </GradleProjectSettings>
-      <GradleProjectSettings>
-        <option name="externalProjectPath" value="$PROJECT_DIR$/SeatAvailability" />
-        <option name="modules">
-          <set>
-            <option value="$PROJECT_DIR$/SeatAvailability" />
-          </set>
-        </option>
-      </GradleProjectSettings>
-    </option>
-  </component>
+  <component name="GradleMigrationSettings" migrationVersion="1" />
 </project>

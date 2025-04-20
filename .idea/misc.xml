@@ -2,7 +2,8 @@
 <project version="4">
   <component name="ExternalStorageConfigurationManager" enabled="true" />
   <component name="FrameworkDetectionExcludesConfiguration">
-    <file type="web" url="file://$PROJECT_DIR$/Notification" />
+    <file type="web" url="file://$PROJECT_DIR$/MovieCatalog" />
+    <file type="web" url="file://$PROJECT_DIR$/Notificationss" />
     <file type="web" url="file://$PROJECT_DIR$/Promo" />
     <file type="web" url="file://$PROJECT_DIR$/SeatAvailability" />
   </component>
@@ -11,6 +12,10 @@
       <list>
         <option value="$PROJECT_DIR$/booking/pom.xml" />
         <option value="$PROJECT_DIR$/pom.xml" />
+        <option value="$PROJECT_DIR$/Notification/pom.xml" />
+        <option value="$PROJECT_DIR$/MovieCatalog/pom.xml" />
+        <option value="$PROJECT_DIR$/Promo/pom.xml" />
+        <option value="$PROJECT_DIR$/SeatAvailability/pom.xml" />
       </list>
     </option>
   </component>

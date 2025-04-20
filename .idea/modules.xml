@@ -2,7 +2,6 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/MovieCatalog/MovieCatalog.iml" filepath="$PROJECT_DIR$/MovieCatalog/MovieCatalog.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/microservices-bookings.iml" filepath="$PROJECT_DIR$/.idea/microservices-bookings.iml" />
     </modules>
   </component>
