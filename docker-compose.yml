@@ -87,8 +87,10 @@ services:
     ports:
       - "8082:8082"
     environment:
+      - SPRING_PROFILES_ACTIVE=docker
       - EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE=http://eureka-server:8761/eureka/
     depends_on:
+      - db
       - eureka-server
       - rabbitmq
     networks:

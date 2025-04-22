@@ -3,6 +3,8 @@ package org.msa.one.notification.api;
 import org.msa.one.notification.service.NotificationService;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.UUID;
+
 @RestController
 @RequestMapping("/api/notifications")
 public class NotificationController {
@@ -18,6 +20,11 @@ public class NotificationController {
                                   @RequestParam String userId,
                                   @RequestParam String type,
                                   @RequestParam String channel) {
-        notificationService.handleBookedEvent(bookingId, userId, type, channel);
+        notificationService.handleBookedEvent(
+                UUID.fromString(bookingId),
+                UUID.fromString(userId),
+                type,
+                channel
+        );
     }
 }

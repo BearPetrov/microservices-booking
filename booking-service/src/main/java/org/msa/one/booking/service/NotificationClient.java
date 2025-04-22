@@ -1,6 +1,8 @@
 package org.msa.one.booking.service;
 
 import org.msa.one.booking.entity.Booking;
+import org.msa.one.booking.service.BookingEvent;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
@@ -16,18 +18,33 @@ public class NotificationClient {
     private static final String ROUTING_KEY_BOOKING_CREATED = "booking.created";
     private static final String ROUTING_KEY_BOOKING_CANCELED = "booking.canceled";
 
-    // Явный конструктор
     public NotificationClient(RabbitTemplate rabbitTemplate) {
         this.rabbitTemplate = rabbitTemplate;
     }
 
     public void sendBookingCreatedEvent(Booking booking) {
-        log.info("Sending booking-created event, bookingId={}", booking.getId());
-        rabbitTemplate.convertAndSend(EXCHANGE_NOTIFICATION, ROUTING_KEY_BOOKING_CREATED, booking);
+        log.info("📤 Sending booking-created event, bookingId={}", booking.getId());
+
+        BookingEvent event = new BookingEvent(
+                booking.getId(),
+                booking.getUserId(),
+                "CREATED",
+                "EMAIL"
+        );
+
+        rabbitTemplate.convertAndSend(EXCHANGE_NOTIFICATION, ROUTING_KEY_BOOKING_CREATED, event);
     }
 
     public void sendBookingCanceledEvent(Booking booking) {
-        log.info("Sending booking-canceled event, bookingId={}", booking.getId());
-        rabbitTemplate.convertAndSend(EXCHANGE_NOTIFICATION, ROUTING_KEY_BOOKING_CANCELED, booking);
+        log.info("📤 Sending booking-canceled event, bookingId={}", booking.getId());
+
+        BookingEvent event = new BookingEvent(
+                booking.getId(),
+                booking.getUserId(),
+                "CANCELED",
+                "EMAIL"
+        );
+
+        rabbitTemplate.convertAndSend(EXCHANGE_NOTIFICATION, ROUTING_KEY_BOOKING_CANCELED, event);
     }
 }
