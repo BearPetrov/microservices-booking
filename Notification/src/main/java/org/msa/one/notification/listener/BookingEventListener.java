@@ -2,26 +2,36 @@ package org.msa.one.notification.listener;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.msa.one.notification.listener.BookingEvent;
 import org.msa.one.notification.service.NotificationService;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.stereotype.Component;
 
+@Slf4j
+@Component
+@RequiredArgsConstructor
+public class BookingEventListener {
 
-    @Component
-    @RequiredArgsConstructor
-    public class BookingEventListener {
+    private final NotificationService notificationService;
 
-        private final NotificationService notificationService;
-
-        @RabbitListener(queues = "booking-created-queue", containerFactory = "rabbitListenerContainerFactory")
-        public void handleBookingCreatedEvent(BookingEvent event) {
-            System.out.println("📥 [Listener] Got booking: " + event);
-            notificationService.handleBookedEvent(
-                    event.getBookingId(),
-                    event.getUserId(),
-                    event.getType(),
-                    event.getChannel()
-            );
-        }
+    @RabbitListener(queues = "booking-created-queue", containerFactory = "rabbitListenerContainerFactory")
+    public void handleBookingCreatedEvent(BookingEvent event) {
+        log.info("📥 [Listener] Got booking: {}", event);
+        notificationService.handleBookedEvent(
+                event.getBookingId(),
+                event.getUserId(),
+                event.getType(),
+                event.getChannel()
+        );
     }
+    
+    @RabbitListener(queues = "booking-canceled-queue", containerFactory = "rabbitListenerContainerFactory")
+    public void handleBookingCanceledEvent(BookingEvent event) {
+        log.info("📥 [Listener] Got canceled booking: {}", event);
+        notificationService.handleBookedEvent(
+                event.getBookingId(),
+                event.getUserId(),
+                event.getType(),
+                event.getChannel()
+        );
+    }
+}

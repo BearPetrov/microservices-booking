@@ -26,8 +26,8 @@ public class NotificationClient {
         log.info("📤 Sending booking-created event, bookingId={}", booking.getId());
 
         BookingEvent event = new BookingEvent(
-                booking.getId(),
-                booking.getUserId(),
+                booking.getId().toString(),
+                booking.getUserId().toString(),
                 "CREATED",
                 "EMAIL"
         );
@@ -39,8 +39,8 @@ public class NotificationClient {
         log.info("📤 Sending booking-canceled event, bookingId={}", booking.getId());
 
         BookingEvent event = new BookingEvent(
-                booking.getId(),
-                booking.getUserId(),
+                booking.getId().toString(),
+                booking.getUserId().toString(),
                 "CANCELED",
                 "EMAIL"
         );
