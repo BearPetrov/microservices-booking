@@ -1,7 +1,7 @@
 package org.msa.one.booking.service;
 
 import org.msa.one.booking.entity.Booking;
-import org.msa.one.event.BookingEvent;
+import org.msa.one.booking.service.BookingEvent;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

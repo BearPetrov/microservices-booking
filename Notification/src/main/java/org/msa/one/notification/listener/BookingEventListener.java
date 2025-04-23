@@ -2,7 +2,7 @@ package org.msa.one.notification.listener;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.msa.one.event.BookingEvent;
+import org.msa.one.notification.listener.BookingEvent;
 import org.msa.one.notification.service.NotificationService;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.stereotype.Component;
